@@ -155,6 +155,14 @@ class Monitor(BaseModel):
 
         yt = await google.discover('youtube', 'v3')
 
+        r = await google.as_user(
+            yt.channels.list(part = "snippet", mine = True),
+            user_creds = user_creds
+        )
+
+        c = r["items"][0]
+        log.info(f'Logged in to YouTube as "{c["snippet"]["title"]}" ({c["id"]})')
+
         # either aiogoogle docs suck or I'm sending this request wrong, but I cant send it all in "insert" for some reason
         r = await google.as_user(
             yt.videos.insert(part = "id", upload_file=pathlib.Path(self.stream.file).absolute()),
