@@ -163,23 +163,19 @@ class Monitor(BaseModel):
 
         log.info(r)
 
-        if r.status != 200:
-            log.error("Could not upload video")
-
-        stream_date = self.started_at.strftime("%Y/%m/%d")
+        stream_date = self.stream.started_at.strftime("%Y/%m/%d")
 
         desc = ""
-        desc += f'Date: {stream_date}\n'
-        desc += f'Title: {self.title}\n'
+        desc += f'Title: {self.stream.title}\n'
         desc += f'\nTimeline:\n'
 
-        for t in self.timeline:
+        for t in self.stream.timeline:
             desc += f'[{t.timestamp}] {t.game_name}\n'
 
         data = {
             "id": r.get("id"),
             "snippet": {
-                "title": f'[{stream_date}] - {self.title}',
+                "title": f'[{stream_date}] {self.stream.title}',
                 "description": desc,
                 "categoryId": "24"
             },
@@ -196,9 +192,8 @@ class Monitor(BaseModel):
 
         log.info(r)
 
-        if r.status == 200:
-            log.info(f'Removing file {self.file}')
-            await aiofiles.remove(self.file)
+        log.info(f'Removing file {self.stream.file}')
+        await aiofiles.os.remove(self.stream.file)
 
 
         # Theoretically, we might be able to use something like this to just stream the content
