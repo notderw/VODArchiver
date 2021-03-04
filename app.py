@@ -175,6 +175,7 @@ class Monitor(BaseModel):
 
         desc = ""
         desc += f'Title: {self.stream.title}\n'
+        desc += f'Streamed {stream_date} on https://www.twitch.tv/jericho/\n'
         desc += f'\nTimeline:\n'
 
         for t in self.stream.timeline:
